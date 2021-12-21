@@ -19,7 +19,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.avinashraja98.FancyHotWireCutter"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,6 +30,9 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "plugins": [
+      "@config-plugins/react-native-ble-plx"
+    ]
   }
 }
