@@ -4,15 +4,15 @@ import { Buffer } from "buffer";
 import { BleError, Device, State, Characteristic } from 'react-native-ble-plx';
 import Slider from '@react-native-community/slider';
 
-import { Text, View } from '../components/Themed';
+import { Text, useThemeColor, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 
 import { manager } from '../components/BleManager';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   const [connected, setConnected] = useState<Boolean>(false);
-  const [ledBrightnessScroll, setLedBrightnessScroll] = useState<Number>(0);
-  const [ledBrightnessNotif, setLedBrightnessNotif] = useState<Number>(0);
+  const [ledBrightnessScroll, setLedBrightnessScroll] = useState<number>(0);
+  const [ledBrightnessNotif, setLedBrightnessNotif] = useState<number>(0);
   const [ledUseNotif, setLedUseNotif] = useState<Boolean>(false);
   const [ledCharacteristic, setLedCharacteristic] = useState<Characteristic | null>(null);
 
@@ -82,20 +82,29 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
     });
   }
 
+  const tintColor = useThemeColor({}, 'slider');
+
+  const lightColor = () => `rgb(255, ${255 - ((ledBrightnessScroll / 65535) * 255)}, ${255 - ((ledBrightnessScroll / 65535) * 255)})`;
+  const darkColor = () => `rgb(${(ledBrightnessScroll / 65535) * 255}, 0, 0)`;
+
+  const percentage = () => ((ledBrightnessScroll / 65535) * 100).toFixed(0);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Led Brightness</Text>
+    <View lightColor={lightColor()} darkColor={darkColor()} style={styles.container}>
+      <Text style={styles.title}>Hot Wire Temp Control</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       {connected ? <Text>Connected!</Text> : <Text>Connecting...</Text>}
       <Slider
-        style={{ width: '75%', height: 40 }}
+        style={styles.slider}
         minimumValue={0}
         maximumValue={65535}
-        minimumTrackTintColor="#FFFFFF"
-        maximumTrackTintColor="#000000"
+        minimumTrackTintColor={tintColor}
+        maximumTrackTintColor={tintColor}
+        thumbTintColor="transparent"
         value={ledUseNotif ? ledBrightnessNotif : ledBrightnessScroll}
         onValueChange={setLedBrightnessScroll}
       />
+      <Text style={styles.percentage}>{percentage()}</Text>
     </View>
   );
 }
@@ -104,15 +113,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    padding: 20,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
   },
   separator: {
-    marginVertical: 30,
+    marginVertical: 10,
     height: 1,
     width: '80%',
   },
+  slider: {
+    width: '100%',
+    height: '75%',
+    transform: [{ rotate: "-90deg" }]
+  },
+  percentage: {
+    fontSize: 50,
+    fontWeight: 'bold',
+  }
 });
