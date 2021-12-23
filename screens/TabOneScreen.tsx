@@ -91,7 +91,7 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
 
   return (
     <View lightColor={lightColor()} darkColor={darkColor()} style={styles.container}>
-      <Text style={styles.title}>Hot Wire Temperature</Text>
+      <Text style={styles.title}>Hot Wire Temp Control</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       {connected ? <Text>Connected!</Text> : <Text>Connecting...</Text>}
       <Slider
